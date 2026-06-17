@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zemei Li · 李泽梅 — 个人简历</title>
+  <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌸</text></svg>">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root{--font-sans:'Inter',-apple-system,sans-serif;--font-mono:'IBM Plex Mono',monospace}
+    :root{
+      --rose:#b86b6b;--rose-light:#d4a0a0;--rose-dark:#8b4a4a;
+      --gold:#c4956a;--gold-light:#f5e6d3;
+      --text-primary:#2c2c2c;--text-secondary:#6b6b6b;--text-tertiary:#999;
+      --bg:#fdfaf7;--bg-card:#fff;--border:#ede4dc;
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:var(--font-sans);background:var(--bg);color:var(--text-primary);line-height:1.6;-webkit-font-smoothing:antialiased}
+
+    #scroll-progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--rose),var(--gold),var(--rose-light));z-index:9999;width:0%;transition:width .1s linear}
+
+    .page{max-width:860px;margin:0 auto;padding:clamp(2rem,5vw,4rem) clamp(1.25rem,4vw,2.5rem)}
+
+    /* Section base */
+    .sec{margin-bottom:clamp(2.5rem,5vw,4rem);opacity:0;transform:translateY(24px);transition:opacity .6s cubic-bezier(.19,1,.22,1),transform .6s cubic-bezier(.19,1,.22,1)}
+    .sec.visible{opacity:1;transform:translateY(0)}
+    .sec-title{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--rose);margin-bottom:1.5rem;padding-bottom:.75rem;border-bottom:1px solid var(--border)}
+
+    /* Header */
+    .profile{display:flex;align-items:center;gap:clamp(1.25rem,3vw,2rem);margin-bottom:2.5rem}
+    .avatar{width:80px;height:80px;border-radius:50%;overflow:hidden;border:2px solid var(--border);flex-shrink:0;background:linear-gradient(135deg,var(--rose-light),var(--gold-light));display:flex;align-items:center;justify-content:center;font-size:2rem}
+    .profile-info{flex:1}
+    .profile-name{font-size:clamp(1.5rem,3vw,2rem);font-weight:800;letter-spacing:-.03em;color:var(--text-primary);line-height:1.1}
+    .profile-role{font-size:.9rem;color:var(--text-secondary);margin-top:.35rem;line-height:1.5}
+    .contact-row{display:flex;gap:.75rem;margin-top:.75rem;flex-wrap:wrap}
+    .ctc-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.4rem .85rem;border:1px solid var(--border);border-radius:8px;font-size:.8rem;font-weight:500;color:var(--rose);text-decoration:none;transition:all .2s}
+    .ctc-btn:hover{background:var(--gold-light);border-color:var(--rose)}
+
+    /* About */
+    .about-text{font-size:.92rem;color:#555;line-height:1.75;max-width:680px}
+
+    /* Timeline */
+    .timeline{position:relative;padding-left:2rem}
+    .timeline::before{content:'';position:absolute;left:8px;top:4px;bottom:4px;width:1px;background:var(--border)}
+    .tl-item{position:relative;margin-bottom:2rem;padding:1.5rem;background:var(--bg-card);border:1px solid #f3ede6;border-radius:16px;transition:transform .2s ease,box-shadow .2s ease}
+    .tl-item:hover{transform:translateX(4px);box-shadow:0 8px 30px rgba(180,120,100,.08)}
+    .tl-item::before{content:'';position:absolute;left:-1.625rem;top:1.75rem;width:9px;height:9px;border-radius:50%;background:var(--rose);border:2px solid #fff;box-shadow:0 0 0 2px var(--rose)}
+    .tl-header{display:flex;flex-wrap:wrap;align-items:baseline;gap:.5rem;margin-bottom:.5rem}
+    .tl-title{font-size:1.1rem;font-weight:700;color:var(--text-primary);letter-spacing:-.01em}
+    .tl-date{font-size:.75rem;font-weight:600;color:var(--rose);font-family:var(--font-mono);letter-spacing:.02em;padding:.15rem .6rem;background:rgba(184,107,107,.06);border-radius:6px}
+    .tl-subtitle{font-size:.8rem;color:var(--text-secondary);margin-bottom:.5rem}
+    .tl-summary{font-size:.85rem;color:#555;line-height:1.6;margin-bottom:.75rem}
+    .tl-tags{display:flex;flex-wrap:wrap;gap:.35rem}
+    .tl-tag{font-size:.7rem;font-weight:500;color:#7a6a5e;padding:.15rem .55rem;background:var(--gold-light);border-radius:4px;letter-spacing:.02em}
+    .tl-detail{margin-top:.75rem;padding-top:.75rem;border-top:1px solid var(--border);display:none;font-size:.82rem;color:#555;line-height:1.7}
+    .tl-item.open .tl-detail{display:block}
+    .tl-toggle{display:inline-flex;align-items:center;gap:.3rem;font-size:.75rem;font-weight:600;color:var(--rose);cursor:pointer;margin-top:.5rem;background:none;border:none;padding:0}
+    .tl-toggle i{transition:transform .3s}
+    .tl-item.open .tl-toggle i{transform:rotate(180deg)}
+
+    /* Education */
+    .edu-card{display:flex;justify-content:space-between;align-items:flex-start;padding:1.25rem;background:var(--bg-card);border:1px solid var(--border);border-radius:14px;margin-bottom:.75rem}
+    .edu-school{font-weight:700;font-size:.95rem;color:var(--text-primary)}
+    .edu-degree{font-size:.8rem;color:var(--text-secondary);margin-top:.15rem}
+    .edu-date{font-size:.75rem;font-weight:600;color:var(--rose);font-family:var(--font-mono);flex-shrink:0;margin-left:1rem}
+
+    /* Skills */
+    .skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem}
+    .skill-card{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:1.25rem;transition:transform .3s cubic-bezier(.34,1.56,.64,1),box-shadow .3s ease,border-color .3s ease}
+    .skill-card:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(184,107,107,.08);border-color:var(--rose-light)}
+    .skill-icon{font-size:1.5rem;margin-bottom:.75rem}
+    .skill-name{font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-secondary);margin-bottom:.6rem}
+    .skill-items{display:flex;flex-wrap:wrap;gap:.3rem}
+    .skill-tag{font-size:.72rem;font-weight:500;color:var(--text-primary);padding:.2rem .55rem;background:var(--gold-light);border-radius:4px}
+
+    /* Languages */
+    .lang-row{display:flex;gap:1.5rem;flex-wrap:wrap}
+    .lang-item{display:flex;align-items:center;gap:.5rem;font-size:.85rem}
+    .lang-dot{width:10px;height:10px;border-radius:50%;background:var(--rose);display:inline-block}
+
+    /* Contact */
+    .contact-end{text-align:center;padding:2rem 0}
+    .contact-end p{font-size:.85rem;color:var(--text-secondary);margin-bottom:1rem}
+
+    /* Footer */
+    .footer{text-align:center;padding:2rem 0;font-size:.78rem;color:var(--text-tertiary);border-top:1px solid var(--border);margin-top:1rem}
+
+    @media(max-width:600px){
+      .profile{flex-direction:column;text-align:center}
+      .contact-row{justify-content:center}
+      .timeline{padding-left:1.5rem}
+      .tl-item::before{left:-1.125rem}
+      .skills-grid{grid-template-columns:repeat(2,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <div id="scroll-progress"></div>
+  <div class="page">
+
+    <!-- Profile -->
+    <section class="sec"><div class="profile">
+      <div class="avatar">🌸</div>
+      <div class="profile-info">
+        <h1 class="profile-name">Zemei Li · 李泽梅</h1>
+        <p class="profile-role">不动产评估师 · 项目总经理助理<br>现就职于 BS 不动产咨询</p>
+        <div class="contact-row">
+          <a href="#" data-contact="phone" class="ctc-btn"><i class="fa fa-phone"></i><span class="contact-text"></span></a>
+          <a href="#" data-contact="email" class="ctc-btn"><i class="fa fa-envelope"></i><span class="contact-text"></span></a>
+        </div>
+      </div>
+    </div></section>
+
+    <!-- About -->
+    <section class="sec">
+      <div class="sec-title">关于我</div>
+      <div class="about-text">
+        <p>国际经济与金融硕士，4年以上不动产评估与项目管理经验。兼具扎实的估值方法论功底与项目全流程管理能力，擅长将市场分析、财务建模与商务谈判结合，为公募项目及片区更新提供专业决策支持。英语流利，跨文化沟通无障碍。</p>
+      </div>
+    </section>
+
+    <!-- Work Experience Timeline -->
+    <section class="sec">
+      <div class="sec-title">工作经历</div>
+      <div class="timeline" id="timeline">
+        <div class="tl-item open">
+          <div class="tl-header"><h3 class="tl-title">项目总经理助理</h3><span class="tl-date">2024.06 — 至今</span></div>
+          <div class="tl-subtitle">BS 不动产咨询</div>
+          <p class="tl-summary">协助项目总经理完成项目全流程运营管理，主导报告起草、预算编制与监控、商务招投标协调。</p>
+          <div class="tl-tags"><span class="tl-tag">预算管理</span><span class="tl-tag">招投标</span><span class="tl-tag">项目运营</span><span class="tl-tag">跨部门协调</span></div>
+          <div class="tl-detail">
+            <p>• 起草项目全部报告文件，确保管理层决策有据可依<br>• 编制年度预算并监控各部门按约定时间、内容和金额执行<br>• 参与项目改造方案讨论、第三方机构管理维护<br>• 组织协调各项商务招投标活动</p>
+          </div>
+          <button class="tl-toggle">展开详情 <i class="fa fa-chevron-down"></i></button>
+        </div>
+        <div class="tl-item">
+          <div class="tl-header"><h3 class="tl-title">估价师 · 分析师</h3><span class="tl-date">2021.04 — 至今</span></div>
+          <div class="tl-subtitle">BS 不动产咨询</div>
+          <p class="tl-summary">双重角色——作为估价师完成公募项目评估，作为分析师参与片区更新升级咨询。</p>
+          <div class="tl-tags"><span class="tl-tag">不动产评估</span><span class="tl-tag">市场分析</span><span class="tl-tag">财务建模</span><span class="tl-tag">可比案例研究</span></div>
+          <div class="tl-detail">
+            <p><strong>估价师：</strong><br>• 参与公募项目评估工作，根据客户需求目的和物业类型选择适当估价方法<br>• 综合考虑市场情况与物业本身情况，动态设置资本化率、折现率等关键参数<br>• 产出专业评估报告<br><br><strong>分析师：</strong><br>• 参与片区更新升级相关咨询工作<br>• 收集并研究区域内市场情况，分析相关可比案例<br>• 结合项目自身情况给出规划建议</p>
+          </div>
+          <button class="tl-toggle">展开详情 <i class="fa fa-chevron-down"></i></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Education -->
+    <section class="sec">
+      <div class="sec-title">教育背景</div>
+      <div class="edu-card"><div><div class="edu-school">海外知名高校</div><div class="edu-degree">国际经济与金融 硕士</div></div><span class="edu-date">2018 — 2020</span></div>
+    </section>
+
+    <!-- Skills -->
+    <section class="sec">
+      <div class="sec-title">核心能力</div>
+      <div class="skills-grid">
+        <div class="skill-card">
+          <div class="skill-icon">📊</div>
+          <div class="skill-name">估值分析</div>
+          <div class="skill-items"><span class="skill-tag">市场比较法</span><span class="skill-tag">收益还原法</span><span class="skill-tag">成本法</span><span class="skill-tag">DCF建模</span></div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-icon">🏢</div>
+          <div class="skill-name">不动产咨询</div>
+          <div class="skill-items"><span class="skill-tag">市场研究</span><span class="skill-tag">可比案例分析</span><span class="skill-tag">片区规划</span><span class="skill-tag">可行性研究</span></div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-icon">📋</div>
+          <div class="skill-name">项目管理</div>
+          <div class="skill-items"><span class="skill-tag">预算编制</span><span class="skill-tag">招投标管理</span><span class="skill-tag">报告起草</span><span class="skill-tag">跨部门协调</span></div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-icon">💼</div>
+          <div class="skill-name">商务能力</div>
+          <div class="skill-items"><span class="skill-tag">客户沟通</span><span class="skill-tag">供应商管理</span><span class="skill-tag">合同谈判</span></div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-icon">🛠️</div>
+          <div class="skill-name">工具技能</div>
+          <div class="skill-items"><span class="skill-tag">Excel 高级</span><span class="skill-tag">财务建模</span><span class="skill-tag">PPT 演示</span></div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-icon">🌐</div>
+          <div class="skill-name">语言能力</div>
+          <div class="skill-items"><span class="skill-tag">普通话 · 母语</span><span class="skill-tag">英语 · 流利</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="sec" style="text-align:center">
+      <div class="sec-title" style="display:inline-block">联系方式</div>
+      <div class="contact-end">
+        <p>期待与您交流合作</p>
+        <div class="contact-row" style="justify-content:center">
+          <a href="#" data-contact="phone" class="ctc-btn"><i class="fa fa-phone"></i><span class="contact-text"></span></a>
+          <a href="#" data-contact="email" class="ctc-btn"><i class="fa fa-envelope"></i><span class="contact-text"></span></a>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">&copy; 2026 Zemei Li · 专业创造价值</footer>
+  </div>
+
+  <script>
+    // Contact obfuscation
+    (function(){
+      var ph=atob('MTM4MTE2MDk5NTU='),em=atob('bmFkb3VidXNoaXNoaXlhQDEyNi5jb20=');
+      document.querySelectorAll('[data-contact="phone"]').forEach(function(e){e.href='tel:'+ph;e.querySelector('.contact-text').textContent=ph});
+      document.querySelectorAll('[data-contact="email"]').forEach(function(e){e.href='mailto:'+em;e.querySelector('.contact-text').textContent=em});
+    })();
+
+    // Scroll progress
+    (function(){
+      var bar=document.getElementById('scroll-progress');
+      window.addEventListener('scroll',function(){
+        var s=window.pageYOffset||document.documentElement.scrollTop;
+        var m=document.documentElement.scrollHeight-document.documentElement.clientHeight;
+        bar.style.width=m>0?(s/m)*100+'%':'0%';
+      });
+    })();
+
+    // Section reveals
+    (function(){
+      var obs=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible')})},{threshold:.15});
+      document.querySelectorAll('.sec').forEach(function(s){obs.observe(s)});
+    })();
+
+    // Timeline toggles
+    document.querySelectorAll('.tl-toggle').forEach(function(btn){
+      btn.addEventListener('click',function(){this.parentElement.classList.toggle('open')});
+    });
+  </script>
+</body>
+</html>
